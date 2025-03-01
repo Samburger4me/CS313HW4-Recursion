@@ -105,12 +105,14 @@ def group_sum_clump(start, nums, target):
     if start >= len(nums):
         return target == 0
 
-    clump_count = 1
-    while start + 1 < len(nums) and nums[start + 1] == nums[start]:
-        clump_count += nums[start + 1]
+    clump_count = start
+    while clump_count < len(nums) and nums[clump_count] == nums[start]:
+        clump_count += 1
 
-    return (group_sum_clump(start + 1, nums, target)
-            or group_sum_clump(start + 1, nums, target - (nums[start] * clump_count)))
+    clump_sum = nums[start] * (clump_count - start)
+
+    return (group_sum_clump(clump_count, nums, target)
+            or group_sum_clump(clump_count, nums, target - clump_sum))
 
 
 def split_array(nums):
@@ -171,8 +173,7 @@ def split_53(nums):
             return equal_split(start + 1, split3 + nums[start], split5)
         if nums[start] % 5 == 0:
             return equal_split(start + 1, split3, split5 + nums[start])
-        else:
-            return (equal_split(start + 1, split3 + nums[start], split5)
+        return (equal_split(start + 1, split3 + nums[start], split5)
                 or equal_split(start + 1, split3, split5 + nums[start]))
 
     return equal_split(0, 0, 0)
